@@ -627,7 +627,7 @@ init -2 python:
         def get_tit_strip_list(self, visible_enough = True): #Generates a list of clothing that, when removed from this outfit, result in tits being visible. Useful for animated clothing removal.
             test_outfit = self.get_copy()
             items_to_strip = []
-            while not ((test_outfit.tits_visible() and visible_enough) or (test_outfit.tits_available() and not visible_enough)):
+            while not ((test_outfit.tits_visible() and visible_enough) or (test_outfit.tits_visible() and test_outfit.tits_available() and not visible_enough)):
                 the_item = test_outfit.remove_random_upper(top_layer_first = True)
                 if not the_item:
                     the_item = test_outfit.remove_random_any(top_layer_first = True, exclude_feet = True)
@@ -637,22 +637,13 @@ init -2 python:
             return items_to_strip
 
         def strip_to_tits(self, visible_enough = True): #Removes all clothing from this item until breasts are visible.
-            if visible_enough:
-                while not self.tits_visible():
-                    the_item = self.remove_random_upper(top_layer_first = True)
-                    if not the_item:
-                        break
-            else:
-                while not (self.tits_visible() and self.tits_available()):
-                    the_item = self.remove_random_upper(top_layer_first = True)
-                    if not the_item:
-                        break
+            self.remove_clothing_list(self.get_tit_strip_list(visible_enough = visible_enough))
             return
 
         def get_vagina_strip_list(self, visible_enough = False):
             test_outfit = self.get_copy()
             items_to_strip = []
-            while not ((test_outfit.vagina_visible() and visible_enough) or (test_outfit.vagina_available() and not visible_enough)):
+            while not ((test_outfit.vagina_visible() and visible_enough) or (test_outfit.vagina_visible() and test_outfit.vagina_available() and not visible_enough)):
                 the_item = test_outfit.remove_random_lower(top_layer_first = True) #Try and remove lower layer clothing first each loop
                 if not the_item:
                     the_item = test_outfit.remove_random_any(top_layer_first = True, exclude_feet = True) #If that fails to make progress (ie. due to upper body items blocking things) remove upper body stuff until we can make progress again.
